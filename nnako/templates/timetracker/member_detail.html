@@ -58,6 +58,13 @@
         </div>
     </div>
 </div>
+
+<!-- Alert for successful deletion -->
+<div class="alert alert-success alert-dismissible fade show" id="deleteSuccessAlert" role="alert" style="display: none;">
+    Member has been successfully deleted!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -136,8 +143,10 @@
                 success: function (data) {
                     // Handle success response
                     console.log(data);
+                    // Show the success alert
+                    $('#deleteSuccessAlert').fadeIn().delay(2000).fadeOut(); 
                     // Redirect to the member list page after successful deletion
-                    window.location.href = '{% url "timetracker:member-list" %}';
+                    window.location.href = '/api/members/';
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error('Error deleting member:', errorThrown);

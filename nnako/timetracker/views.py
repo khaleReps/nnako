@@ -1,10 +1,9 @@
 from rest_framework import generics
-from .models import Member, Project, Task, Subtask
+from .models import Member, Project, Task, Subtask  # Make sure to import the Project model here
 from .serializers import MemberSerializer, ProjectSerializer, TaskSerializer, SubtaskSerializer
 from django.shortcuts import render, redirect
 from .forms import MemberForm
 from django.http import JsonResponse
-
 
 class MemberListCreateView(generics.ListCreateAPIView):
     queryset = Member.objects.all()
@@ -23,7 +22,7 @@ class MemberListCreateView(generics.ListCreateAPIView):
         form = MemberForm(request.POST)
         if form.is_valid():
             form.save()
-            if request.is_ajax():
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 # Return success response for AJAX requests
                 return JsonResponse({'success': True})
             return redirect('timetracker:member-list')  # Redirect to member list after successful creation
@@ -35,7 +34,6 @@ class MemberListCreateView(generics.ListCreateAPIView):
             'members': members
         }
         return render(request, 'timetracker/member_list.html', context)
-
 
 
 class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -55,6 +53,30 @@ class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         instance.delete()
         return redirect('timetracker:member-list')  # Redirect to member list after successful deletion
+    
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        form = MemberForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('timetracker:member-list')
+        else:
+            context = {
+                'member': instance,
+                'form': form,
+            }
+            return render(request, 'timetracker/member_detail.html', context)
+
+    def delete(self, request, *args, **kwargs):
+        print("Delete method called")
+        instance = self.get_object()
+        instance.delete()
+        
+        # Check if the request is an AJAX call and return JSON response
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
+        else:
+            return redirect('timetracker:member-list')
     
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
