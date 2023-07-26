@@ -3,6 +3,37 @@
 {% block content %}
 <div class="container mt-5">
     <h1>Welcome to the Time Tracking App!</h1>
-    <!-- Your content here -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <h3>Members</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'timetracker:member-list' %}">View Members</a></li>
+                <li class="list-group-item"><a href="{% url 'timetracker:member-create' %}">Add New Member</a></li>
+
+                {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:member-create' %}">Add New Member</a></li> {% endcomment %}
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h3>Projects</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'timetracker:project-list-create' %}">View Projects</a></li>
+                {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:project-create' %}">Add New Project</a></li> {% endcomment %}
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h3>Tasks</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'timetracker:task-list-create' %}">View Tasks</a></li>
+                {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:task-create' %}">Add New Task</a></li> {% endcomment %}
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h3>Subtasks</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'timetracker:subtask-list-create' %}">View Subtasks</a></li>
+                {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:subtask-create' %}">Add New Subtask</a></li> {% endcomment %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}

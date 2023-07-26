@@ -1,0 +1,29 @@
+{% extends 'base_internal.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Tasks List</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Project</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.name }}</td>
+                <td>{{ task.project.name }}</td>
+                <td>
+                    <a href="{% url 'timetracker:task-update' task.pk %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'timetracker:task-delete' task.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'timetracker:task-create' %}" class="btn btn-success">Add New Task</a>
+</div>
+{% endblock %}

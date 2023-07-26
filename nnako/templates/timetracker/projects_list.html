@@ -1,0 +1,33 @@
+{% extends 'base_internal.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Projects List</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Members</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>
+                    {% for member in project.members.all %}
+                    {{ member.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'timetracker:project-update' project.pk %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'timetracker:project-delete' project.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'timetracker:project-create' %}" class="btn btn-success">Add New Project</a>
+</div>
+{% endblock %}
