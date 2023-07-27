@@ -2,13 +2,26 @@
 
 {% block content %}
 <div class="container mt-5">
+
     <h2>Members List</h2>
+
+    <!-- Horizontal under breakpoint -->
+    <ul class="list-group list-group-horizontal">
+        <li class="list-group-item " data-bs-toggle="modal" data-bs-target="#addMemberModal">Add Member</li>
+        <li class="list-group-item " data-bs-toggle="modal" data-bs-target="#addMemberModal">Update Members</li>
+        <li class="list-group-item " data-bs-toggle="modal" data-bs-target="#addMemberModal">Delete Members</li>
+    </ul>
+
+    <br>
+
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Department</th>
+                <th>Branch</th>
                 <th>Email</th>
-                <th>Action</th>
+                {% comment %} <th>Action</th> {% endcomment %}
             </tr>
         </thead>
         <tbody>
@@ -16,11 +29,14 @@
             <tr>
                 
                     <td><a href="{% url 'timetracker:member-detail' member.pk %}">{{ member.name }} </a></td>
+                    <td>{{ member.division }}</td>
+                    <td>{{ member.branch }}</td>
                     <td>{{ member.email }}</td>
-                    <td>
+
+                    {% comment %} <td>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{ member.pk }}">Update</button>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ member.pk }}">Delete</button>
-                    </td>
+                    </td> {% endcomment %}
                
             </tr>
 
@@ -73,9 +89,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-        Add New Member
-    </button>
+ 
 </div>
 
 

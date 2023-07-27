@@ -3,9 +3,32 @@
 {% block content %}
 <div class="container mt-5">
     <h1>Member Details</h1>
-    <h3>{{ member.name }}</h3>
-    <p>Email: {{ member.email }}</p>
-    <p>Email: {{ member.email }}</p>
+
+    <div class="container col-12 pt-5">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                {% comment %} <img src="{% url 'member.profile_image' %}" class=""> {% endcomment %}
+                <p>{{ member.name }} {{ member.surname }}</p>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                {% comment %} <h3>{{ member.name }}</h3>
+                <p>Division: {{ member.division }}</p>
+                <p>Branch: {{ member.branch }}</p>
+                <p>Email: {{ member.email }}</p>
+                 {% endcomment %}
+                
+                <p>Email: {{ member.email }}</p>
+                <p>Contact Number: {{ member.contact_number }}</p>
+                <p>Date of birth: {{ member.date_of_birth }}</p>
+
+                <p>Address: {{ member.address }}</p>
+                <p>Insurance: {{ member.insurance }}</p>
+            </div>
+          
+        </div>
+    </div>    
+
+   
     <!-- Add other member details as needed -->
 
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
@@ -140,13 +163,18 @@
                 method: 'POST',
                 data: form.serialize(),
                 dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Set the Content-Type header
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Set the X-Requested-With header
+                },
                 success: function (data) {
                     // Handle success response
+                    console.log("Deleted")
                     console.log(data);
                     // Show the success alert
                     $('#deleteSuccessAlert').fadeIn().delay(2000).fadeOut(); 
                     // Redirect to the member list page after successful deletion
-                    window.location.href = '/api/members/';
+                    window.location.href = 'https://www.google.com'; // Corrected URL format
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error('Error deleting member:', errorThrown);

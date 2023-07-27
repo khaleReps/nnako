@@ -36,6 +36,10 @@ class MemberListCreateView(generics.ListCreateAPIView):
         return render(request, 'timetracker/member_list.html', context)
 
 
+
+    
+
+
 class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
@@ -49,34 +53,33 @@ class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         }
         return render(request, 'timetracker/member_detail.html', {'member': instance})
 
-    def post(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-        return redirect('timetracker:member-list')  # Redirect to member list after successful deletion
+    # def post(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.delete()
+    #     return redirect('timetracker:member-list')  # Redirect to member list after successful deletion
     
-    def put(self, request, *args, **kwargs):
-        instance = self.get_object()
-        form = MemberForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('timetracker:member-list')
-        else:
-            context = {
-                'member': instance,
-                'form': form,
-            }
-            return render(request, 'timetracker/member_detail.html', context)
+    # def put(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     form = MemberForm(request.POST, instance=instance)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('timetracker:member-list')
+    #     else:
+    #         context = {
+    #             'member': instance,
+    #             'form': form,
+    #         }
+    #         return render(request, 'timetracker/member_detail.html', context)
 
-    def delete(self, request, *args, **kwargs):
-        print("Delete method called")
-        instance = self.get_object()
-        instance.delete()
+    # def delete(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.delete()
         
-        # Check if the request is an AJAX call and return JSON response
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({'success': True})
-        else:
-            return redirect('timetracker:member-list')
+    #     # Check if the request is an AJAX call and return JSON response
+    #     if request.is_ajax():
+    #         return JsonResponse({'success': True})
+    #     else:
+    #         return redirect('timetracker:member-list')
     
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
