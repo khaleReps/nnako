@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <div class="container my-4">
+    <div class="row mb-2">
+      <div class="col">
+        <button class="btn btn-primary" id="createBtn">Create</button>
+        <button class="btn btn-warning" id="editBtn">Edit</button>
+        <button class="btn btn-danger" id="deleteBtn">Delete</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>City</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>John Doe</td>
+              <td>30</td>
+              <td>New York</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Jane Smith</td>
+              <td>25</td>
+              <td>Los Angeles</td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create the modal for displaying the number of selected checkboxes -->
+  <div class="modal" id="selectedCountModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Selected Checkboxes Count</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+        </div>
+        <div class="modal-body">
+          <p id="selectedCountText">No checkboxes selected.</p>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      var editColumnAdded = false;
+      var deleteColumnAdded = false;
+
+
+      function updateSelectedCount() {
+        // Count selected checkboxes and display the modal
+        var selectedCount = $("tbody input[type='checkbox']:checked").length;
+        console.log(selectedCount + " checkboxes selected.");
+        $("#selectedCountText").text(selectedCount + " checkboxes selected.");
+      }
+
+      // Add event listener to checkboxes
+      $("tbody").on("change", "input[type='checkbox']", function() {
+        updateSelectedCount();
+      });
+
+      $("#editBtn, #deleteBtn").click(function() {
+        // Check if the Edit button is clicked
+        if ($(this).attr("id") === "editBtn") {
+          if (!editColumnAdded) {
+            // Add a new column to the right
+            $("thead tr").append("<th>Update</th>");
+            $("tbody tr").each(function() {
+              $(this).append("<td><input type='checkbox'></td>");
+            });
+            editColumnAdded = true;
+          } else {
+            // Remove the column
+            $("thead th:last-child").remove();
+            $("tbody td:last-child").remove();
+            editColumnAdded = false;
+
+            // Count selected checkboxes and display the modal
+            var selectedCount = $("tbody input[type='checkbox']:checked").length;
+            $("#selectedCountText").text(selectedCount + " checkboxes selected.");
+            $("#selectedCountModal").modal("show");
+          }
+        } else if ($(this).attr("id") === "deleteBtn") {
+          if (!deleteColumnAdded) {
+            // Add a new column to the left
+            $("thead tr").prepend("<th>Delete</th>");
+            $("tbody tr").each(function() {
+              $(this).prepend("<td><input type='checkbox'></td>");
+            });
+            deleteColumnAdded = true;
+          } else {
+            // Remove the column
+            $("thead th:first-child").remove();
+            $("tbody td:first-child").remove();
+            deleteColumnAdded = false;
+
+            // Count selected checkboxes and display the modal
+            var selectedCount = $("tbody input[type='checkbox']:checked").length;
+            $("#selectedCountText").text(selectedCount + " checkboxes selected.");
+            $("#selectedCountModal").modal("show");
+          }
+        }
+
+        // Update the selected count after modifying the table
+        updateSelectedCount();
+      });
+    });
+  </script>
+
+
+
+
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
