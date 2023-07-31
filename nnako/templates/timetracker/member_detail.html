@@ -6,15 +6,22 @@
 
     <div class="col">
         <button class="btn btn-dark" id="backBtn" onclick="goBack()"><i class='bx bx-arrow-back'></i></button>
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal"><i class='bx bx-edit-alt' ></i></button>
+        <button type="button" class="btn btn-warning" id="updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal" data-update-url="{% url 'timetracker:member-update' member.id %}"><i class='bx bx-edit-alt'></i></button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class='bx bx-trash' ></i></button>
     </div>
 
     <div class="container col-12 pt-5">
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-12">
-                <img src="{{ member.profile_image}}" class="img-thumbnail">
-                <p>{{ member.name }} {{ member.surname }}</p>
+                <h4 class="list-group-item">{{ member.name }} {{ member.surname }}</h4>
+                <img src="{{ member.profile_image}}" class="img-fluid img-thumbnail col-9">
+                
+                
+                <ul class="list-inline py-2">
+                    <li class="list-inline-item"><i class='bx bx-cake pe-1'></i> {{ member.date_of_birth }}</li>
+                    <li class="list-inline-item"><i class='bx bx-detail pe-1'></i> {{ member.employement }}</li>
+                    <li class="list-inline-item"><i class='bx bx-briefcase pe-1' ></i> {{ member.work_preference }}</li>
+                </ul>
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <table class="table">
@@ -62,45 +69,8 @@
                     </tbody>
                 </table>
             </div>
-            <!--
-            <div class="col-lg-6 col-md-12 col-sm-12">
-                <p>User Name: {{ member.username }}</p>
-                <p>Employee ID: {{ member.employee_id }}</p>
-                <p>Email: {{ member.email }}</p>
-                <hr>
-
-                
-                <p>Department: {{ member.department }}</p>
-                <p>Branch: {{ member.branch }}</p>
-                <hr>
-
-                <p>Manager / Supervisor: {{ member.manager }}</p>
-                <p>Employment Status:   <span class="badge text-bg-success">{{ member.employment_status }}</span></p>
-                <p>Work Hours: {{ member.work_hours }}</p>
-                <p>Time Zone: {{ member.time_zone }}</p>
-
-              
-
-                <p>Hire Date:  {{ member.hire_date }}</p>
-                
-                {% comment %} <p>Contact Number: {{ member.contact_number }}</p>
-                <p>Date of birth: {{ member.date_of_birth }}</p>
- {% endcomment %}
-
-             
-
-                
-                             <p>Address: {{ member.address }}</p>
-                <p>Insurance: {{ member.insurance }}</p>
-            
-
-            </div>
-          
         </div>
-    </div>    
-
--->
-
+    </div>
 </div>
 
 <!-- Update Modal -->
@@ -112,11 +82,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'timetracker:member-create' %}" id="addMemberForm">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary" id="addMemberButton">Save Member</button>
-                </form>
+         
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -170,16 +136,17 @@
     // When the page is ready
     $(document).ready(function () {
         // Function to show the update modal when the "Update" button is clicked
-        $('#updateModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var modal = $(this);
-            // AJAX call to get the form content from the server (if needed)
+        $('#updateBtn').on('click', function () {
+            var updateUrl = $(this).data('update-url');
+            var modal = $('#updateModal');
+            // AJAX call to get the form content from the server
             $.ajax({
-                url: button.attr('href'), // Assuming the href attribute contains the URL to fetch the form
+                url: updateUrl,
                 method: 'GET',
                 dataType: 'html',
                 success: function (data) {
                     modal.find('.modal-body').html(data);
+                    modal.modal('show'); // Show the modal after fetching the form content
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error('Error loading form:', errorThrown);
