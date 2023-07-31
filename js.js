@@ -206,8 +206,8 @@ $(document).ready(function() {
                 
                 if (editBtnClickedOnce) {
                     updateSelectedCount();
-                    $("#modalTitle").text("Updates");
-                    $("#selectedCountText").text(editSelectedCount + " members selected for update.");
+        $("#modalTitle").text("Updates");
+        $("#selectedCountText").text(editSelectedCount + " members selected for update.");
                     if (editSelectedCount > 0) {
                         $("#selectedCountModal").modal("show");
                     }
@@ -292,3 +292,193 @@ $(document).ready(function() {
     
     </script>
 {% endblock %}  
+
+
+
+v3
+$(document).ready(function() {
+    var editBtnClickedOnce = false;
+    var editColumnAdded = false;
+    window.editSelectedCount = 0;
+    window.isEditing = false;
+
+    // Initialize count when the page is loaded
+    updateSelectedCount();
+
+    // Click event handler for #editBtn
+    $("#editBtn").click(function() {
+        if (!editColumnAdded) {
+            console.log("Edit column opened.");
+
+            // Add a new column to the right
+            $("thead tr").append("<th>Update</th>");
+            $("tbody tr").each(function() {
+                $(this).append("<td><input type='checkbox'></td>");
+            });
+
+            editColumnAdded = true;
+            window.isEditing = true;
+        } else {
+            // Remove the column
+            console.log("Edit column closed.");
+            $("thead th:last-child").remove();
+            $("tbody td:last-child").remove();
+            editColumnAdded = false;
+
+            if (editBtnClickedOnce) {
+                updateSelectedCount();
+                $("#modalTitle").text("Updates");
+                $("#selectedCountText").text(window.editSelectedCount + " members selected for update.");
+                
+                if (window.editSelectedCount === 0) {
+                    console.log("no Members were selected")
+                    
+                    
+                    
+                    
+                    
+                    
+                    /*       
+                    
+                    // Show the #noMembersSelected alert
+                     // Function to add the 'hidden' class to fade out the alert
+                     function fadeOutAlert() {
+                        var alertElement = document.getElementById('noMembersSelected');
+                        if (alertElement) {
+                            alertElement.classList.add('hidden');
+                        }
+                    }
+                    setTimeout(fadeOutAlert, 2000);
+
+                    $("#noMembersSelected").show();
+                    // Hide the #noMembersSelected alert after 1 second
+                    setTimeout(function() {
+                        $("#noMembersSelected").hide();
+                    }, 1000);
+
+                    */
+                    
+                    
+                    
+                    
+                    
+             
+                  
+                } else if (window.editSelectedCount > 0) {
+                    console.log("Members were selected")
+                    $("#selectedCountModal").modal("show");
+                }
+            }
+
+            $("#selectedCountModal").modal("show");
+            editBtnClickedOnce = true;
+            window.isEditing = false;
+
+            
+        }
+    });
+});
+</script>
+{% endblock %}
+
+
+
+
+<!-- Your HTML code remains unchanged -->
+
+{% block scripts %}  
+<script>
+// Go back to the previous page
+function goBack() {
+    window.history.back();
+}
+
+// Handle checkbox change using event delegation
+$(document).on("change", "tbody input[type='checkbox']", function() {
+    if (window.isEditing) {
+        handleCheckboxChange(this);
+    }
+});
+
+// Handle checkbox change
+function handleCheckboxChange(checkbox) {
+    if (checkbox.checked) {
+        console.log(`Checkbox for ${checkbox.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent} has been selected.`);
+    } else {
+        console.log(`Checkbox for ${checkbox.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent} has been unselected.`);
+    }
+
+    var checkedCount = $("tbody input[type='checkbox']:checked").length;
+    if (window.isEditing) {
+        window.editSelectedCount = checkedCount;
+        console.log(window.editSelectedCount + " edit checkboxes selected.");
+    }
+    updateSelectedCount(); // Call updateSelectedCount to refresh the count
+}
+
+// Update selected count
+function updateSelectedCount() {
+    window.editSelectedCount = $("tbody input[type='checkbox']:checked").length;
+
+    // Update the text in the modal for the selected checkboxes count
+    $("#selectedCountText").text(window.editSelectedCount + " members selected for update.");
+    $("#editSelectedCountText").text(window.editSelectedCount + " checkboxes selected for editing.");
+    $("#deleteSelectedCountText").text(window.editSelectedCount + " checkboxes selected for deleting.");
+}
+
+// Function to fade out the noMembersSelected alert
+function fadeOutAlert() {
+    var alertElement = document.getElementById('noMembersSelected');
+    if (alertElement) {
+        alertElement.classList.add('hidden');
+    }
+}
+
+$(document).ready(function() {
+    var editColumnAdded = false;
+    window.editSelectedCount = 0;
+    window.isEditing = false;
+
+    // Initialize count when the page is loaded
+    updateSelectedCount();
+
+    // Click event handler for #editBtn
+    $("#editBtn").click(function() {
+        if (!editColumnAdded) {
+            console.log("Edit column opened.");
+
+            // Add a new column to the right
+            $("thead tr").append("<th>Update</th>");
+            $("tbody tr").each(function() {
+                $(this).append("<td><input type='checkbox'></td>");
+            });
+
+            editColumnAdded = true;
+            window.isEditing = true;
+        } else {
+            // Remove the column
+            console.log("Edit column closed.");
+            $("thead th:last-child").remove();
+            $("tbody td:last-child").remove();
+            editColumnAdded = false;
+            window.isEditing = false;
+
+            // Reset the selected count to zero
+            window.editSelectedCount = 0;
+            updateSelectedCount();
+
+            // Show the messages based on selected checkboxes count
+            if (window.editSelectedCount === 0) {
+                console.log("No members were selected for editing.");
+            } else {
+                console.log("Members were selected for editing.");
+                console.log(window.editSelectedCount + " in Total" );
+            }
+        }
+    });
+
+    // Hide the #noMembersSelected alert initially when the page loads
+    $("#noMembersSelected").hide();
+});
+</script>
+{% endblock %}

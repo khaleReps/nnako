@@ -4,6 +4,16 @@
 <div class="container mt-5">
     <h1>Member Details</h1>
 
+    <div class="col">
+        <button class="btn btn-dark" id="backBtn" onclick="goBack()"><i class='bx bx-arrow-back'></i></button>
+        {% comment %} <button class="btn btn-success" id="createBtn" data-bs-toggle="modal" data-bs-target="#addMemberModal"><i class='bx bx-user-plus' ></i></button> {% endcomment %}
+        {% comment %} <button class="btn btn-warning" id="editBtn"><i class='bx bx-edit-alt' ></i></button>
+        <button class="btn btn-danger" id="deleteBtn"><i class='bx bx-trash' ></i></button> {% endcomment %}
+
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal"><i class='bx bx-edit-alt' ></i></button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class='bx bx-trash' ></i></button>
+    </div>
+
     <div class="container col-12 pt-5">
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-12">
@@ -11,18 +21,35 @@
                 <p>{{ member.name }} {{ member.surname }}</p>
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12">
-                {% comment %} <h3>{{ member.name }}</h3>
-                <p>Division: {{ member.division }}</p>
-                <p>Branch: {{ member.branch }}</p>
+                <p>User Name: {{ member.username }}</p>
+                <p>Employee ID: {{ member.employee_id }}</p>
                 <p>Email: {{ member.email }}</p>
-                 {% endcomment %}
-                
-                <p>Email: {{ member.email }}</p>
-                <p>Contact Number: {{ member.contact_number }}</p>
-                <p>Date of birth: {{ member.date_of_birth }}</p>
+                <hr>
 
-                <p>Address: {{ member.address }}</p>
+                
+                <p>Department: {{ member.department }}</p>
+                <p>Branch: {{ member.branch }}</p>
+                <hr>
+
+                <p>Manager / Supervisor: {{ member.manager }}</p>
+                <p>Employment Status: {{ member.employment_status }}</p>
+                <p>Work Hours: {{ member.work_hours }}</p>
+                <p>Time Zone: {{ member.time_zone }}</p>
+
+
+                <p>Hire Date:  {{ member.hire_date }}</p>
+                
+                {% comment %} <p>Contact Number: {{ member.contact_number }}</p>
+                <p>Date of birth: {{ member.date_of_birth }}</p>
+ {% endcomment %}
+
+             
+
+                
+                <!--                <p>Address: {{ member.address }}</p>
                 <p>Insurance: {{ member.insurance }}</p>
+                -->
+
             </div>
           
         </div>
@@ -92,6 +119,12 @@
 
 {% block scripts %}
 <script>
+    // Go back to the previous page
+    function goBack() {
+        window.history.back();
+    }
+
+
     // When the page is ready
     $(document).ready(function () {
         // Function to show the update modal when the "Update" button is clicked
