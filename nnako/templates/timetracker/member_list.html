@@ -156,10 +156,6 @@ $(document).ready(function() {
     window.editSelectedCount = 0;
     window.isEditing = false;
 
-    window.editSelectedCount = 0;
-    window.isEditing = false;
-    
-
     // Initialize count when the page is loaded
     updateSelectedCount();
 
@@ -239,80 +235,48 @@ $(document).ready(function() {
     });
 
 
-    // Click event handler for #editBtn
-    $("#editBtn").click(function() {
-        if (!editColumnAdded) {
-            console.log("Edit column opened.");
+    // Click event handler for #deleteBtn
+        $("#deleteBtn").click(function() {
+            if (!deleteColumnAdded) {
+                // Add a new column to the left
+                console.log("Delete column opened.");
+                $("thead tr").prepend("<th>Delete</th>");
+                $("tbody tr").each(function() {
+                    $(this).prepend("<td><input type='checkbox' onclick='handleCheckboxChange(this)'></td>");
 
-            // Add a new column to the right
-            $("thead tr").append("<th>Update</th>");
-            $("tbody tr").each(function() {
-                $(this).append("<td><input type='checkbox'></td>");
-            });
+                    function handleCheckboxChange(checkbox) {
+                        if (checkbox.checked) {
+                            console.log(deleteSelectedCount + " delete checkboxes selected.");
+                        } else {
+                            console.log(deleteSelectedCount + " delete checkboxes selected.");
+                        }
+                    }
 
-            editColumnAdded = true;
-            window.isEditing = true;
-        } else {
-            // Remove the column
-            console.log("Edit column closed.");
-            $("thead th:last-child").remove();
-            $("tbody td:last-child").remove();
-            editColumnAdded = false;
-            window.isEditing = false;
 
-            
-
-            // Show the messages based on selected checkboxes count
-            if (window.editSelectedCount === 0) {
-
-                const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-                const appendAlert = (message, type) => {
-                const wrapper = document.createElement('div')
-                wrapper.innerHTML = [
-                    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-                    `   <div>${message}</div>`,
-                    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-                    '</div>'
-                ].join('')
-
-                alertPlaceholder.append(wrapper)
-                }
-
-                const alertTrigger = document.getElementById('liveAlertBtn')
-                if (alertTrigger) {
-                alertTrigger.addEventListener('click', () => {
-                    appendAlert('Nice, you triggered this alert message!', 'success')
-                })
-                }
-
-                console.log("No members were selected for editing.");
-            
-            } else if (window.editSelectedCount === 1) {
-                console.log("Member were selected for editing.");
-                console.log(window.editSelectedCount + " in Total");
-
-                $("#modalTitle").text("Updates");
-                $("#selectedCountText").text(window.editSelectedCount + " member selected");
-                $("#editSelectedCountText").text(window.editSelectedCount + " member selected for editing.");
-                $("#selectedCountModal").modal("show");
-
+                    
+                });
+                deleteColumnAdded = true;
+                isDeleting = true;
             } else {
-                console.log("Members were selected for editing.");
-                console.log(window.editSelectedCount + " in Total");
-
-                $("#modalTitle").text("Updates");
-                $("#selectedCountText").text(window.editSelectedCount + " members selected");
-                $("#editSelectedCountText").text(window.editSelectedCount + " members selected for editing.");
-                $("#selectedCountModal").modal("show");
-            }
-
-            window.editSelectedCount = 0;
-            updateSelectedCount();
-        }
-
-
+                // Remove the column
+                console.log("Delete column closed."); // Corrected log message
+                $("thead th:first-child").remove();
+                $("tbody td:first-child").remove();
+                deleteColumnAdded = false;
         
-    });
+                if (deleteBtnClickedOnce) {
+                    updateSelectedCount();
+                    $("#modalTitle").text("Deletion");
+                    $("#selectedCountText").text(deleteSelectedCount + " members selected for deletion.");      
+                }
+                
+        
+                $("#selectedCountModal").modal("show");
+                deleteBtnClickedOnce = true;
+                isDeleting = false;
+            }
+        });
+    
     
 
     // Hide the #noMembersSelected alert initially when the page loads

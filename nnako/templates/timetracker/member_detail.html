@@ -6,10 +6,6 @@
 
     <div class="col">
         <button class="btn btn-dark" id="backBtn" onclick="goBack()"><i class='bx bx-arrow-back'></i></button>
-        {% comment %} <button class="btn btn-success" id="createBtn" data-bs-toggle="modal" data-bs-target="#addMemberModal"><i class='bx bx-user-plus' ></i></button> {% endcomment %}
-        {% comment %} <button class="btn btn-warning" id="editBtn"><i class='bx bx-edit-alt' ></i></button>
-        <button class="btn btn-danger" id="deleteBtn"><i class='bx bx-trash' ></i></button> {% endcomment %}
-
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal"><i class='bx bx-edit-alt' ></i></button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class='bx bx-trash' ></i></button>
     </div>
@@ -17,9 +13,56 @@
     <div class="container col-12 pt-5">
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-12">
-                {% comment %} <img src="{% url 'member.profile_image' %}" class=""> {% endcomment %}
+                <img src="{{ member.profile_image}}" class="img-thumbnail">
                 <p>{{ member.name }} {{ member.surname }}</p>
             </div>
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>User Name:</td>
+                            <td>{{ member.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>Employee ID:</td>
+                            <td>{{ member.employee_id }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td>{{ member.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Department:</td>
+                            <td>{{ member.department }}</td>
+                        </tr>
+                        <tr>
+                            <td>Branch:</td>
+                            <td>{{ member.branch }}</td>
+                        </tr>
+                        <tr>
+                            <td>Manager / Supervisor:</td>
+                            <td>{{ member.manager }}</td>
+                        </tr>
+                        <tr>
+                            <td>Employment Status:</td>
+                            <td><span class="badge text-bg-success">{{ member.employment_status }}</span></td>
+                        </tr>
+                        <tr>
+                            <td>Work Hours:</td>
+                            <td>{{ member.work_hours }}</td>
+                        </tr>
+                        <tr>
+                            <td>Time Zone:</td>
+                            <td>{{ member.time_zone }}</td>
+                        </tr>
+                        <tr>
+                            <td>Hire Date:</td>
+                            <td>{{ member.hire_date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <p>User Name: {{ member.username }}</p>
                 <p>Employee ID: {{ member.employee_id }}</p>
@@ -32,10 +75,11 @@
                 <hr>
 
                 <p>Manager / Supervisor: {{ member.manager }}</p>
-                <p>Employment Status: {{ member.employment_status }}</p>
+                <p>Employment Status:   <span class="badge text-bg-success">{{ member.employment_status }}</span></p>
                 <p>Work Hours: {{ member.work_hours }}</p>
                 <p>Time Zone: {{ member.time_zone }}</p>
 
+              
 
                 <p>Hire Date:  {{ member.hire_date }}</p>
                 
@@ -46,20 +90,17 @@
              
 
                 
-                <!--                <p>Address: {{ member.address }}</p>
+                             <p>Address: {{ member.address }}</p>
                 <p>Insurance: {{ member.insurance }}</p>
-                -->
+            
 
             </div>
           
         </div>
     </div>    
 
-   
-    <!-- Add other member details as needed -->
+-->
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
 </div>
 
 <!-- Update Modal -->
@@ -71,9 +112,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post">
+                <form method="post" action="{% url 'timetracker:member-create' %}" id="addMemberForm">
                     {% csrf_token %}
                     {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary" id="addMemberButton">Save Member</button>
                 </form>
             </div>
             <div class="modal-footer">
