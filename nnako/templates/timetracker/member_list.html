@@ -148,7 +148,7 @@ function handleDeleteCheckboxChange(checkbox) {
         console.log(`Delete checkbox for ${checkbox.parentElement.nextElementSibling.textContent} has been unselected.`);
     }
 
-    var checkedCount = $("tbody .deleteCheckbox:checked").length;
+    var checkedCount = $("tbody input[type='checkbox']:checked").length;
     if (window.isDeleting) {
         window.deleteSelectedCount = checkedCount;
         console.log(window.deleteSelectedCount + " delete checkboxes selected.");
@@ -285,8 +285,9 @@ document.addEventListener("DOMContentLoaded", function () {
             deleteColumnAdded = false;
             window.isDeleting = false;
 
-           // Show the messages based on selected checkboxes count
-           if (window.deleteSelectedCount === 0) {
+            updateDeleteSelectedCount();
+            // Show the messages based on selected checkboxes count
+            if (window.deleteSelectedCount === 0) {
 
                 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
                 const appendAlert = (message, type) => {
@@ -329,8 +330,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 $("#selectedCountModal").modal("show");
             }
 
-            window.deleteSelectedCount = 0;
-            updateDeleteSelectedCount();
+                window.deleteSelectedCount = 0;
+                updateDeleteSelectedCount();
             }
     });
     
