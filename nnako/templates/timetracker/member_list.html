@@ -117,12 +117,16 @@ function goBack() {
 // Handle checkbox change using event delegation
 $(document).on("change", "tbody input[type='checkbox']", function() {
     if (window.isEditing) {
-        handleCheckboxChange(this);
+        handleEditCheckboxChange(this);
+    } else if (window.isDeleting) {
+        handleDeleteCheckboxChange(this);
+    } else {
+        console.log("No columns checkboxes were selected");
     }
 });
 
 // Handle checkbox change
-function handleCheckboxChange(checkbox) {
+function handleEditCheckboxChange(checkbox) {
     if (checkbox.checked) {
         console.log(`Checkbox for ${checkbox.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent} has been selected.`);
     } else {
@@ -134,14 +138,35 @@ function handleCheckboxChange(checkbox) {
         window.editSelectedCount = checkedCount;
         console.log(window.editSelectedCount + " edit checkboxes selected.");
     }
-    updateSelectedCount(); // Call updateSelectedCount to refresh the count
+    updateEditSelectedCount();
 }
+
+function handleDeleteCheckboxChange(checkbox) {
+    if (checkbox.checked) {
+        console.log(`Delete checkbox for ${checkbox.parentElement.nextElementSibling.textContent} has been selected.`);
+    } else {
+        console.log(`Delete checkbox for ${checkbox.parentElement.nextElementSibling.textContent} has been unselected.`);
+    }
+
+    var checkedCount = $("tbody .deleteCheckbox:checked").length;
+    if (window.isDeleting) {
+        window.deleteSelectedCount = checkedCount;
+        console.log(window.deleteSelectedCount + " delete checkboxes selected.");
+    }
+    updateDeleteSelectedCount(); 
+}
+
+
 
 // Update selected count
-function updateSelectedCount() {
+function updateEditSelectedCount() {
     window.editSelectedCount = $("tbody input[type='checkbox']:checked").length;
-
 }
+
+function updateDeleteSelectedCount() {
+    window.deleteSelectedCount = $("tbody .deleteCheckbox:checked").length;
+}
+
 
 // Function to fade out the noMembersSelected alert
 function fadeOutAlert() {
@@ -151,13 +176,19 @@ function fadeOutAlert() {
     }
 }
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function () {
+// $(document).ready(function() {
     var editColumnAdded = false;
     window.editSelectedCount = 0;
     window.isEditing = false;
 
+    var deleteColumnAdded = false;
+    window.deleteSelectedCount = 0;
+    window.isDeleting = false;
+
     // Initialize count when the page is loaded
-    updateSelectedCount();
+    updateEditSelectedCount();
+    updateDeleteSelectedCount();
 
     // Click event handler for #editBtn
     $("#editBtn").click(function() {
@@ -179,8 +210,6 @@ $(document).ready(function() {
             $("tbody td:last-child").remove();
             editColumnAdded = false;
             window.isEditing = false;
-
-            
 
             // Show the messages based on selected checkboxes count
             if (window.editSelectedCount === 0) {
@@ -227,7 +256,7 @@ $(document).ready(function() {
             }
 
             window.editSelectedCount = 0;
-            updateSelectedCount();
+            updateEditSelectedCount();
         }
 
 
@@ -236,46 +265,74 @@ $(document).ready(function() {
 
 
     // Click event handler for #deleteBtn
-        $("#deleteBtn").click(function() {
-            if (!deleteColumnAdded) {
-                // Add a new column to the left
-                console.log("Delete column opened.");
-                $("thead tr").prepend("<th>Delete</th>");
-                $("tbody tr").each(function() {
-                    $(this).prepend("<td><input type='checkbox' onclick='handleCheckboxChange(this)'></td>");
+    $("#deleteBtn").click(function() {
+        if (!deleteColumnAdded) {
+            console.log("Delete column opened.");
 
-                    function handleCheckboxChange(checkbox) {
-                        if (checkbox.checked) {
-                            console.log(deleteSelectedCount + " delete checkboxes selected.");
-                        } else {
-                            console.log(deleteSelectedCount + " delete checkboxes selected.");
-                        }
-                    }
+            // Add a new column to the left
+            $("thead tr").prepend("<th>Delete</th>");
+            $("tbody tr").each(function() {
+                $(this).prepend("<td><input type='checkbox'></td>");
+            });
 
+            deleteColumnAdded = true;
+            window.isDeleting = true;
+        } else {
+            // Remove the column
+            console.log("Delete column closed.");
+            $("thead th:first-child").remove();
+            $("tbody td:first-child").remove();
+            deleteColumnAdded = false;
+            window.isDeleting = false;
 
-                    
-                });
-                deleteColumnAdded = true;
-                isDeleting = true;
-            } else {
-                // Remove the column
-                console.log("Delete column closed."); // Corrected log message
-                $("thead th:first-child").remove();
-                $("tbody td:first-child").remove();
-                deleteColumnAdded = false;
-        
-                if (deleteBtnClickedOnce) {
-                    updateSelectedCount();
-                    $("#modalTitle").text("Deletion");
-                    $("#selectedCountText").text(deleteSelectedCount + " members selected for deletion.");      
+           // Show the messages based on selected checkboxes count
+           if (window.deleteSelectedCount === 0) {
+
+                const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+                const appendAlert = (message, type) => {
+                const wrapper = document.createElement('div')
+                wrapper.innerHTML = [
+                    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                    `   <div>${message}</div>`,
+                    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                    '</div>'
+                ].join('')
+
+                alertPlaceholder.append(wrapper)
                 }
-                
-        
+
+                const alertTrigger = document.getElementById('liveAlertBtn')
+                if (alertTrigger) {
+                alertTrigger.addEventListener('click', () => {
+                    appendAlert('Nice, you triggered this alert message!', 'success')
+                })
+                }
+
+                console.log("No members were selected for deletion.");
+            
+            } else if (window.deleteSelectedCount === 1) {
+                console.log("Member were selected for deletion.");
+                console.log(window.deleteSelectedCount + " in Total");
+
+                $("#modalTitle").text("Removal");
+                $("#selectedCountText").text(window.deleteSelectedCount + " member selected");
+                $("#deleteSelectedCountText").text(window.deleteSelectedCount + " member selected for deletion.");
                 $("#selectedCountModal").modal("show");
-                deleteBtnClickedOnce = true;
-                isDeleting = false;
+
+            } else {
+                console.log("Members were selected for deletion.");
+                console.log(window.deleteSelectedCount + " in Total");
+
+                $("#modalTitle").text("Updates");
+                $("#selectedCountText").text(window.deleteSelectedCount + " members selected");
+                $("#deleteSelectedCountText").text(window.deleteSelectedCount + " members selected for deletion.");
+                $("#selectedCountModal").modal("show");
             }
-        });
+
+            window.deleteSelectedCount = 0;
+            updateDeleteSelectedCount();
+            }
+    });
     
     
 
