@@ -280,6 +280,8 @@
         });
     
         if (changesMade) {
+            const csrfToken = getCookie('csrftoken');
+            const formData = new FormData(); 
             $.ajax({
                 url: `/api/members/${memberId}/`,
                 method: 'PUT', 
@@ -288,6 +290,7 @@
                 contentType: false, 
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken') 
+                    //'X-CSRFToken': csrfToken 
                 },
                 success: function(response) {
                     console.log('Update successful:', response);

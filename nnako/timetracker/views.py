@@ -83,8 +83,9 @@ class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         form = MemberForm(request.POST, instance=instance)
         if form.is_valid():
-            form.save()
-            return redirect('timetracker:member-list')
+            instance = form.save()  
+            serializer = self.get_serializer(instance)
+            return JsonResponse(serializer.data)  
         else:
             context = {
                 'member': instance,
