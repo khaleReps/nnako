@@ -79,7 +79,7 @@ class Member(models.Model):
     work_hours = models.DurationField(default=timedelta(minutes=480))
 
     time_zone = models.CharField(max_length=50, choices=TIMEZONE_CHOICES, default=JOHANNESBURG_TZ)
-    hire_date = models.DateField()
+    hire_date = models.DateField(default=timezone.now)
 
     def generate_username(self):
         # Concatenate the first name and last name and remove spaces to create a username.
@@ -123,27 +123,90 @@ class Member(models.Model):
             self.username = self.generate_username()
         super(Member, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_unassigned_member(cls):
+        return cls.objects.get_or_create(username='unassigned', defaults={'name': 'Unassigned'})[0]
+
     def __str__(self):
         return self.name
 
 
 class Project(models.Model):
+    STATUS_CHOICES = [
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
+
+    PRIORITY_CHOICES = [
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low'),
+    ]
+
     name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
     members = models.ManyToManyField(Member, related_name='projects')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(default=timezone.now() + timezone.timedelta(weeks=3))
+    estimated_time = models.DurationField(default=timedelta(hours=1))
+    actual_time = models.DurationField(blank=True, null=True)
+    comments = models.TextField(blank=True)
+
 
     def __str__(self):
         return self.name
 
 class Task(models.Model):
+    STATUS_CHOICES = [
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
+
+    PRIORITY_CHOICES = [
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low'),
+    ]
+
     name = models.CharField(max_length=100)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks')
+    assigned_to = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='assigned_tasks', default=Member.get_unassigned_member)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
+    due_date = models.DateField(default=timezone.now() + timezone.timedelta(weeks=3))
+    estimated_time = models.DurationField(default=timedelta(hours=1))
+    actual_time = models.DurationField(blank=True, null=True)
+    comments = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
 class Subtask(models.Model):
+    STATUS_CHOICES = [
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
+
+    PRIORITY_CHOICES = [
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low'),
+    ]
+
     name = models.CharField(max_length=100)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtasks')
+    assigned_to = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='assigned_subtasks', default=Member.get_unassigned_member)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
+    due_date = models.DateField(default=timezone.now() + timezone.timedelta(weeks=3))
+    estimated_time = models.DurationField(default=timedelta(hours=1))
+    actual_time = models.DurationField(blank=True, null=True)
+    comments = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

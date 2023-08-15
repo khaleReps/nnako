@@ -1,7 +1,14 @@
 {% extends 'base_internal.html' %}
 
 {% block content %}
-<div class="container mt-5">
+ <div class="container my-4 mt-5">
+
+    <div class="col">
+        <button class="btn btn-dark" id="backBtn" onclick="goBack()"><i class='bx bx-arrow-back'></i></button>
+        <button type="button" class="btn btn-warning" id="updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal" data-update-url="{% url 'timetracker:member-update' member.id %}"><i class='bx bx-edit-alt'></i></button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class='bx bx-trash' ></i></button>
+    </div>
+
     <h2>{{ form_title }}</h2>
     <form method="post">
         {% csrf_token %}
@@ -10,4 +17,14 @@
     </form>
     <a href="{% url 'timetracker:subtasks-list' %}" class="btn btn-secondary mt-2">Back to Subtasks List</a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Go back to the previous page
+    function goBack() {
+        window.history.back();
+    }
+
+</script>
 {% endblock %}
