@@ -16,21 +16,21 @@
         <div class="col-md-3">
             <h3>Projects</h3>
             <ul class="list-group">
-                <li class="list-group-item"><a href="{% url 'timetracker:project-create' %}">View Projects</a></li>
+                <li class="list-group-item"><a href="{% url 'timetracker:project-list' %}">View Projects</a></li>
                 {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:project-create' %}">Add New Project</a></li> {% endcomment %}
             </ul>
         </div>
         <div class="col-md-3">
             <h3>Tasks</h3>
             <ul class="list-group">
-                <li class="list-group-item"><a href="{% url 'timetracker:task-create' %}">View Tasks</a></li>
-                {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:task-create' %}">Add New Task</a></li> {% endcomment %}
+                <li class="list-group-item"><a href="{% url 'timetracker:task-list' %}">View Tasks</a></li>
+                <li class="list-group-item"><a href="{% url 'timetracker:task-create' %}">Add New Task</a></li>
             </ul>
         </div>
         <div class="col-md-3">
             <h3>Subtasks</h3>
             <ul class="list-group">
-                <li class="list-group-item"><a href="{% url 'timetracker:subtask-create' %}">View Subtasks</a></li>
+                <li class="list-group-item"><a href="{% url 'timetracker:subtask-list' %}">View Subtasks</a></li>
                 {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:subtask-create' %}">Add New Subtask</a></li> {% endcomment %}
             </ul>
         </div>

@@ -74,7 +74,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Your Django form for adding a new member -->
                     <form method="post" action="{% url 'timetracker:member-create' %}" id="addMemberForm">
                         {% csrf_token %}
                         {{ form.as_p }}

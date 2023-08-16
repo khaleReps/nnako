@@ -1,40 +1,13 @@
-
-
-    # def post(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     instance.delete()
-    #     return redirect('timetracker:member-list')  # Redirect to member list after successful deletion
-    
-    # def put(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     form = MemberForm(request.POST, instance=instance)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('timetracker:member-list')
-    #     else:
-    #         context = {
-    #             'member': instance,
-    #             'form': form,
-    #         }
-    #         return render(request, 'timetracker/member_detail.html', context)
-
-    # def delete(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     instance.delete()
-        
-    #     # Check if the request is an AJAX call and return JSON response
-    #     if request.is_ajax():
-    #         return JsonResponse({'success': True})
-    #     else:
-    #         return redirect('timetracker:member-list')
-
-
 from rest_framework import generics
-from django.shortcuts import render, redirect, get_object_or_404
+
 from .models import Member, Project, Task, Subtask 
 from .serializers import MemberSerializer, ProjectSerializer, TaskSerializer, SubtaskSerializer
 from .forms import MemberForm, ProjectsForm, TasksForm, SubtasksForm
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.views import View
+from django.urls import reverse
 
 class MemberListCreateView(generics.ListCreateAPIView):
     queryset = Member.objects.all()
@@ -99,6 +72,9 @@ class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
         return redirect('timetracker:member-list')
 
+# ===============================================
+# =============================================== 
+
 
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
@@ -144,33 +120,72 @@ class ProjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         }
         return render(request, 'timetracker/project_detail.html', context)
 
+# ===============================================
+# =============================================== 
 
 class TaskListCreateView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    
-    def get(self, request, *args, **kwargs):
-        form = TasksForm()
-        task = self.get_queryset()
-        context = {
-            'form': form,
-            'tasks': task
-        }
-        return render(request, 'timetracker/task_list.html', context)
-    
+    # template_name = 'task_list.html'
+
 
 class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    # template_name = 'task_detail.html'
 
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        context = {
-            'task': instance,
-            'object': serializer.data
-        }
-        return render(request, 'timetracker/task_detail.html', context)
+
+class TaskListView(View):
+    def get(self, request):
+        tasks = Task.objects.all()
+        form = TasksForm()
+        return render(request, 'timetracker/task_list.html', {'task_list': tasks, 'form': form})
+
+class TaskDetailView(View):
+    def get(self, request, pk):
+        task = Task.objects.get(pk=pk)
+        return render(request, 'timetracker/task_detail.html', {'task': task})
+
+class TaskCreateView(View):
+    def get(self, request):
+        form = TasksForm()
+        return render(request, 'timetracker/task_form.html', {'form': form})
+
+    def post(self, request):
+        form = TasksForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('timetracker:task-list'))
+        return render(request, 'timetracker/task_form.html', {'form': form})
+
+class TaskUpdateView(View):
+    def get(self, request, pk):
+        task = Task.objects.get(pk=pk)
+        form = TasksForm(instance=task)
+        return render(request, 'timetracker/task_form.html', {'form': form, 'task': task})
+
+    def post(self, request, pk):
+        task = Task.objects.get(pk=pk)
+        form = TasksForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('timetracker:task-detail', args=[pk]))
+        return render(request, 'timetracker/task_form.html', {'form': form, 'task': task})
+
+class TaskDeleteView(View):
+    def get(self, request, pk):
+        task = Task.objects.get(pk=pk)
+        return render(request, 'timetracker/task_confirm_delete.html', {'task': task})
+
+    def post(self, request, pk):
+        task = Task.objects.get(pk=pk)
+        task.delete()
+        return redirect('timetracker:task-list')     
+        # return redirect(reverse('timetracker:task-list'))
+
+# ===============================================
+# =============================================== 
+
 
 class SubtaskListCreateView(generics.ListCreateAPIView):
     queryset = Subtask.objects.all()

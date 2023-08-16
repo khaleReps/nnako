@@ -28,7 +28,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% for task in Task.tasks.all %}
+                {% comment %} {% for task in Task.tasks.all %} {% endcomment %}
+                {% for task in task_list %}
                     <tr>
                         <td><a href="{% url 'timetracker:task-detail' task.pk %}">{{ task.name }} </a></td>
                         <td>{{ task.assigned_to }}</td>
@@ -54,11 +55,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'timetracker:task-create' %}" id="addTaskForm">
+                <form method="post" action="{% url 'timetracker:task-create' %}">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-primary" id="addTaskButton">Save Task</button>
-                </form>
+                </form> 
             </div>
         </div>
     </div>
@@ -110,7 +111,8 @@
 <script>
     // Go back to the previous page
     function goBack() {
-        window.history.back();
+        //window.history.back();
+        window.location.href = '/';
     }
 
     document.addEventListener("DOMContentLoaded", function () {

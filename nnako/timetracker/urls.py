@@ -1,10 +1,5 @@
 from django.urls import path
-from .views import (
-    MemberListCreateView, MemberRetrieveUpdateDestroyView,
-    ProjectListCreateView, ProjectRetrieveUpdateDestroyView,
-    TaskListCreateView, TaskRetrieveUpdateDestroyView,
-    SubtaskListCreateView, SubtaskRetrieveUpdateDestroyView,
-)
+from .views import *
 
 app_name = 'timetracker'
 
@@ -25,10 +20,13 @@ urlpatterns = [
     
     # Tasks
     path('tasks/', TaskListCreateView.as_view(), name='task-list'),
-    path('tasks/create/', TaskListCreateView.as_view(), name='task-create'),
-    path('tasks/<int:pk>/', TaskRetrieveUpdateDestroyView.as_view(), name='task-detail'),
-    path('tasks/<int:pk>/update/', TaskRetrieveUpdateDestroyView.as_view(), name='task-update'),
-    path('tasks/<int:pk>/delete/', TaskRetrieveUpdateDestroyView.as_view(), name='task-delete'),
+    path('tasks/create/', TaskCreateView.as_view(), name='task-create'),
+    path('tasks/list/', TaskListView.as_view(), name='task-list'),
+    path('tasks/<int:pk>/', TaskRetrieveUpdateDestroyView.as_view(), name='task-retrieve-update-destroy'),
+
+    path('tasks/<int:pk>/detail/', TaskDetailView.as_view(), name='task-detail'),
+    path('tasks/<int:pk>/edit/', TaskUpdateView.as_view(), name='task-update'),
+    path('tasks/<int:pk>/delete/', TaskDeleteView.as_view(), name='task-delete'),
     
     # Subtasks
     path('subtasks/', SubtaskListCreateView.as_view(), name='subtask-list'),
