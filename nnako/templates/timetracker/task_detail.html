@@ -12,7 +12,7 @@
     </div>
 
     <div class="container col-12 pt-5">
-        <div class="row">
+        {% comment %} <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <h4 class="list-group-item">{{ task.name }} {{ task.surname }}</h4>
                 <img src="{{ task.profile_image}}" class="img-fluid img-thumbnail col-9">
@@ -70,6 +70,33 @@
                     </tbody>
                 </table>
             </div>
+        </div> {% endcomment %}
+
+        <div class="container mt-5">
+            <h1>Task Detail: {{ task.name }}</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task Information</h5>
+                    <p class="card-text"><strong>Project:</strong> {{ task.project.name }}</p>
+                    <p class="card-text"><strong>Status:</strong> {{ task.get_status_display }}</p>
+                    <p class="card-text"><strong>Priority:</strong> {{ task.get_priority_display }}</p>
+                    <p class="card-text"><strong>Due Date:</strong> {{ task.due_date }}</p>
+                </div>
+            </div>
+    
+            <h2 class="mt-4">Subtasks</h2>
+            <ul class="list-group mt-3">
+                {% for subtask in task.subtasks.all %}
+                <li class="list-group-item">
+                    <h5>{{ subtask.name }}</h5>
+                    <p><strong>Status:</strong> {{ subtask.get_status_display }}</p>
+                    <p><strong>Priority:</strong> {{ subtask.get_priority_display }}</p>
+                    <p><strong>Due Date:</strong> {{ subtask.due_date }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <a href="{% url 'timetracker:task-list' %}" class="btn btn-secondary mt-4">Back to Tasks</a>
         </div>
     </div>
 </div>
@@ -146,12 +173,12 @@
 
 {% endblock %}
 
-{% comment %} 
 {% block scripts %}
 <script>
     // Go back to the previous page
     function goBack() {
-        window.history.back();
+        //window.history.back();
+        window.location.href = '/api/tasks/list';
     }
 
 
@@ -205,7 +232,8 @@
         });        
     });
 </script>
-{% endblock %} {% endcomment %}
+{% endblock %}
+
 {% comment %} 
 // Function to show the delete modal when the "Delete" button is clicked
         $('#deleteModal').on('show.bs.modal', function (event) {

@@ -152,7 +152,7 @@ class Project(models.Model):
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(default=timezone.now() + timezone.timedelta(weeks=3))
     estimated_time = models.DurationField(default=timedelta(hours=1))
-    actual_time = models.DurationField(blank=True, null=True)
+    actual_time = models.DurationField(default=timedelta(hours=0))
     comments = models.TextField(blank=True)
 
 
@@ -179,7 +179,7 @@ class Task(models.Model):
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
     due_date = models.DateField(default=timezone.now() + timezone.timedelta(weeks=3))
     estimated_time = models.DurationField(default=timedelta(hours=1))
-    actual_time = models.DurationField(blank=True, null=True)
+    actual_time = models.DurationField(default=timedelta(hours=0))
     comments = models.TextField(blank=True)
 
     def __str__(self):
@@ -205,7 +205,7 @@ class Subtask(models.Model):
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
     due_date = models.DateField(default=timezone.now() + timezone.timedelta(weeks=3))
     estimated_time = models.DurationField(default=timedelta(hours=1))
-    actual_time = models.DurationField(blank=True, null=True)
+    actual_time = models.DurationField(default=timedelta(hours=0))
     comments = models.TextField(blank=True)
 
     def __str__(self):

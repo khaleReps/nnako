@@ -97,25 +97,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Delete Task</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this subtask?</p>
-                <p>ID: {{ subtask.id }}</p>
-                <p>Name: {{ subtask.name }}</p>
-                <p>Email: {{ subtask.email }}</p>
+                <p>Are you sure you want to delete the task "{{ subtask.name }}"?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <form method="post">
+                <form method="post" action="{% url 'timetracker:subtask-delete' subtask.pk %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
                 </form>
             </div>
         </div>
     </div>
-</div>
+</div> 
+
 
 <!-- Alert for successful deletion -->
 <div class="alert alert-success alert-dismissible fade show" id="deleteSuccessAlert" role="alert" style="display: none;">
@@ -129,7 +127,8 @@
 <script>
     // Go back to the previous page
     function goBack() {
-        window.history.back();
+        //window.history.back();
+        window.location.href = '/api/subtask/';
     }
 
 
@@ -181,48 +180,7 @@
             });
         });
 
-        // Function to show the delete modal when the "Delete" button is clicked
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var modal = $(this);
-            // Assuming the "Delete" button has the subtask ID in a data attribute
-            var subtaskId = button.data('subtask-id');
-            var subtaskName = button.data('subtask-name');
-            var subtaskEmail = button.data('subtask-email');
-            // Update the content of the delete modal
-            modal.find('.modal-body p#delete-subtask-id').text(subtaskId);
-            modal.find('.modal-body p#delete-subtask-name').text(subtaskName);
-            modal.find('.modal-body p#delete-subtask-email').text(subtaskEmail);
-        });
-
-        // Function to handle form submission in the delete modal
-        $('#deleteModal form').on('submit', function (event) {
-            event.preventDefault(); // Prevent default form submission
-            var form = $(this);
-            // AJAX call to submit the form data to the server
-            $.ajax({
-                url: form.attr('action'), // Assuming the action attribute contains the URL to submit the form
-                method: 'POST',
-                data: form.serialize(),
-                dataType: 'json',
-                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Set the Content-Type header
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest' // Set the X-Requested-With header
-                },
-                success: function (data) {
-                    // Handle success response
-                    console.log("Deleted")
-                    console.log(data);
-                    // Show the success alert
-                    $('#deleteSuccessAlert').fadeIn().delay(2000).fadeOut(); 
-                    // Redirect to the subtask list page after successful deletion
-                    window.location.href = 'https://www.google.com'; // Corrected URL format
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    console.error('Error deleting subtask:', errorThrown);
-                }
-            });
-        });
+        
     });
 </script>
 {% endblock %}

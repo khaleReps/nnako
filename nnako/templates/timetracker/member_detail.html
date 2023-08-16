@@ -105,25 +105,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Delete Task</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this project?</p>
-                <p>ID: {{ project.id }}</p>
-                <p>Name: {{ project.name }}</p>
-                <p>Email: {{ project.email }}</p>
+                <p>Are you sure you want to delete the task "{{ member.name }}"?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <form id="deleteForm" action="{% url 'timetracker:member-delete' member.id %}" method="post">
+                <form method="post" action="{% url 'timetracker:member-delete' member.pk %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger" id="deleteYesButton">Delete</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
                 </form>
             </div>
         </div>
     </div>
-</div>
+</div> 
+
 
 
 
@@ -391,51 +389,7 @@
 
 
 
-    // Function to show the delete modal when the "Delete" button is clicked
-    const form = document.getElementById('deleteForm');
-
-    $('#deleteModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var memberId = button.data('member-id');
-        var memberName = button.data('member-name');
-        var memberEmail = button.data('member-email');
-        
-        var modal = $(this);
-        modal.find('.modal-body p#delete-member-id').text(memberId);
-        modal.find('.modal-body p#delete-member-name').text(memberName);
-        modal.find('.modal-body p#delete-member-email').text(memberEmail);
-
-        const deleteForm = modal.find('#deleteForm');
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); 
-
-            $.ajax({
-                url: `/api/members/${memberId}/`,
-                method: 'DELETE',
-                dataType: 'json',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                success: function(data) {
-                    window.location.href = '/api/members/';
-                    // Handle success response
-                    console.log('Member Deleted', data);
-                    // Show the success alert
-                    //$('#deleteSuccessAlert').fadeIn().delay(2000).fadeOut();
-                    // Redirect to the appropriate page after successful deletion
-                    //window.location.href = '{% url "timetracker:member-list" %}';
-                    window.location.href = '/api/members/';
-
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    console.error('Error deleting member:', errorThrown);
-                }
-            });                      
-        });
-    });
-
+    
 
 </script>
 {% endblock %}

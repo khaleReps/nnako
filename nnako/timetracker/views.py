@@ -72,6 +72,16 @@ class MemberRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
         return redirect('timetracker:member-list')
 
+
+class MemberDeleteView(View):
+    def get(self, request, pk):
+        member = Member.objects.get(pk=pk)
+        return render(request, 'timetracker/task_confirm_delete.html', {'member': member})
+
+    def post(self, request, pk):
+        member = Member.objects.get(pk=pk)
+        member.delete()
+        return redirect('timetracker:member-list')     
 # ===============================================
 # =============================================== 
 
@@ -119,6 +129,17 @@ class ProjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             'object': serializer.data
         }
         return render(request, 'timetracker/project_detail.html', context)
+    
+
+class ProjectDeleteView(View):
+    def get(self, request, pk):
+        project = Project.objects.get(pk=pk)
+        return render(request, 'timetracker/task_confirm_delete.html', {'project': project})
+
+    def post(self, request, pk):
+        project = Project.objects.get(pk=pk)
+        project.delete()
+        return redirect('timetracker:project-list')     
 
 # ===============================================
 # =============================================== 
@@ -213,3 +234,12 @@ class SubtaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         }
         return render(request, 'timetracker/subtasks_detail.html', context)
     
+class SubtaskDeleteView(View):
+    def get(self, request, pk):
+        subtask = Subtask.objects.get(pk=pk)
+        return render(request, 'timetracker/task_confirm_delete.html', {'subtask': subtask})
+
+    def post(self, request, pk):
+        subtask = Subtask.objects.get(pk=pk)
+        subtask.delete()
+        return redirect('timetracker:subtask-list')     
