@@ -1,5 +1,7 @@
 {% extends 'base_internal.html' %}
 
+
+
 {% block content %}
  <div class="container my-4 mt-5">
     <h1>Welcome to the Time Tracking App!</h1>
@@ -9,8 +11,6 @@
             <ul class="list-group">
                 <li class="list-group-item"><a href="{% url 'timetracker:member-list' %}">View Members</a></li>
                 <li class="list-group-item"><a href="{% url 'timetracker:member-create' %}">Add New Member</a></li>
-
-                {% comment %} <li class="list-group-item"><a href="{% url 'timetracker:member-create' %}">Add New Member</a></li> {% endcomment %}
             </ul>
         </div>
         <div class="col-md-3">
@@ -37,3 +37,4 @@
     </div>
 </div>
 {% endblock %}
+

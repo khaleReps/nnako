@@ -17,9 +17,13 @@
 </head>
 
 <body>
+
+  {% include 'web_app/snippets/navbar.html' %}
+
   {% block content %}
   {% endblock content %}
 
+  {% include 'web_app/snippets/footer.html' %}
   <!-- Add jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -30,6 +34,8 @@
 
   {% block scripts %}
   {% endblock scripts %}
+
+  
 </body>
 
 </html>
