@@ -1,0 +1,162 @@
+<nav class="navbar navbar-expand-sm navbar-primary mx-2" style="background-color: ;">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+        aria-expanded="false" aria-label="Toggle navigation"></button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+        </ul>
+ 
+        <form class="d-flex my-2 my-lg-0 px-3">
+            <!-- Horizontal under breakpoint -->
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" id="project" data-bs-toggle="modal" data-bs-target="#modalId"><i class='bx bx-plus-circle' ></i> Project</li>
+                <li class="list-group-item" id="label"><i class='bx bx-purchase-tag' ></i></box-icon></li>
+                <li class="list-group-item" id="billing"><i class='bx bx-dollar' ></i></li>
+                <li class="list-group-item" id="timer">00:00:00</li>
+                <li class="list-group-item bg-success text-white" id="workButton">Start</li>
+                <li class="list-group-item bg-success text-white" id="finishButton" style="display:none">End</li>
+            </ul>
+        </form>
+    </div>
+</nav>
+
+<!-- Modal Body -->
+<div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">Project, Task, and Subtask Selection</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="selectForm">
+                <div class="modal-body">
+                    {% comment %} <label for="projectSelect">Select Project:</label>
+                    <select class="form-select" id="projectSelect" name="project">
+                        {% for project in projects %}
+                            <option value="{{ project.id }}">{{ project.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="taskSelect">Select Task:</label>
+                    <select class="form-select" id="taskSelect" name="task">
+                        {% for task in tasks %}
+                            <option value="{{ task.id }}">{{ task.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="subtaskSelect">Select Subtask:</label>
+                    <select class="form-select" id="subtaskSelect" name="subtask">
+                        {% for subtask in subtasks %}
+                            <option value="{{ subtask.id }}">{{ subtask.name }}</option>
+                        {% endfor %}
+                    </select> {% endcomment %}
+                    <select class="form-select" id="projectSelect" name="project">
+                        <option value="">Select Project</option>
+                    </select>
+                    <select class="form-select" id="taskSelect" name="task">
+                        <option value="">Select Task</option>
+                    </select>
+                    <select class="form-select" id="subtaskSelect" name="subtask">
+                        <option value="">Select Subtask</option>
+                    </select>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Select</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const timerElement = document.getElementById("timer");
+    const startButton = document.getElementById("workButton");
+    const endButton = document.getElementById("finishButton")
+    const selectForm = document.getElementById("selectForm");
+    let timerInterval;
+    let seconds = 0;
+
+    
+
+    function updateTimerDisplay() {
+        const formattedTime = new Date(seconds * 1000).toISOString().substr(11, 8);
+        timerElement.innerText = formattedTime;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(function() {
+            seconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    startButton.addEventListener("click", function() {
+    if (startButton.innerText === "Start") {
+        startButton.innerText = "Pause";
+        startButton.classList.remove("bg-success");
+        startButton.classList.add("bg-info");
+        endButton.style.display = "block";
+        startTimer();
+    } else if (startButton.innerText === "Pause") {
+        startButton.innerText = "Continue";
+        stopTimer();
+        endButton.style.display = "block";
+    } else if (startButton.innerText === "Continue") {
+        startButton.innerText = "Pause";
+        endButton.style.display = "block";
+        startTimer();
+    
+    } else if (startButton.innerText === "End") {
+        startButton.innerText = "Start";
+        stopTimer();
+        startButton.classList.remove("bg-info");
+        startButton.classList.add("bg-success");
+        endButton.style.display = "none";
+        seconds = 0;
+        updateTimerDisplay();
+    }
+});
+
+endButton.addEventListener("click", function() {
+    if (startButton.innerText !== "End") {
+        startButton.innerText = "End";
+        stopTimer();
+        endButton.style.display = "none";
+        seconds = 0;
+        updateTimerDisplay();
+    }
+});
+    
+const myModal = new bootstrap.Modal(document.getElementById('modalId'), options)
+
+
+selectForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    const selectedProjectId = document.getElementById("projectSelect").value;
+    const selectedTaskId = document.getElementById("taskSelect").value;
+    const selectedSubtaskId = document.getElementById("subtaskSelect").value;
+
+    console.log("Selected Project ID:", selectedProjectId);
+    console.log("Selected Task ID:", selectedTaskId);
+    console.log("Selected Subtask ID:", selectedSubtaskId);
+
+    const modalElement = document.getElementById('modalId');
+    const bootstrapModal = new bootstrap.Modal(modalElement);
+    bootstrapModal.hide();
+});
+
+
+
+});
+</script>
